@@ -1,3 +1,6 @@
 /jsharedServer/nbproject/private/
 /jsharedCommon/nbproject/private/
 /jsharedClient/nbproject/private/
+/jsharedCommon/build/
+/jsharedServer/build/
+/jsharedClient/build/

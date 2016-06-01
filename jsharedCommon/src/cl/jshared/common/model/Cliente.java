@@ -15,9 +15,6 @@ public class Cliente extends Thread implements Serializable{
     private String nick;
     private InputStream is;
     private OutputStream os;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
-    private Object objeto;
     
     public Cliente(Socket socket) {
         this.socket = socket;
@@ -47,14 +44,24 @@ public class Cliente extends Thread implements Serializable{
             try {
                 System.out.println("Esperando stream del cliente...");
                 is = socket.getInputStream();
-                System.out.println("Llegó objeto desde el cliente");
-                ois = new ObjectInputStream(is);
                 
-                objeto = ois.readObject();
-                System.out.println("Objeto recibido!: "+objeto);
+                byte[] bytes = new byte[16*1024];
+
+                int count;
+                while ((count = is.read(bytes)) > 0) {
+//                    out.write(bytes, 0, count);
+                    System.out.println(bytes);
+                }
+                
+                String str = new String(bytes);
+                System.out.println(str);
+                
+//                ois = new ObjectInputStream(is);
+                
+//                objeto = ois.readObject();
+                System.out.println("Llegó objeto desde el cliente");
+//                System.out.println("Objeto recibido!: "+objeto);
             } catch (IOException ex) {
-                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

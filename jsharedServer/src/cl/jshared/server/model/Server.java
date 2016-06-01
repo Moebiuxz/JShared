@@ -26,9 +26,10 @@ public class Server extends Thread{
     @Override
     public void run(){
         try {
+            server = new ServerSocket(puerto);
             System.out.println("Servidor arriba en puerto: "+puerto);
             while(true){
-                server = new ServerSocket(puerto);
+                System.out.println("Esperando cliente...");
                 socketClienteNuevo = server.accept();
                 System.out.println("Llegó cliente nuevo: "+socketClienteNuevo);
                 clienteActual = new Cliente(socketClienteNuevo);
