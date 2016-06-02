@@ -1,5 +1,6 @@
 package cl.jshared.common.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,11 +54,23 @@ public class Cliente extends Thread implements Serializable {
             System.out.println("Llegó objeto desde el cliente");
             while (count != -1) {
                 baos.write(bytes, 0, count);
-                System.out.println(baos.toString());
+                
                 count = socket.getInputStream().read(bytes);
             }
             
+            Object o = Serial.deserialize(baos.toByteArray());
+            
+            if(o instanceof String){
+                String str = (String)o;
+                System.out.println(str);
+            }else if(o instanceof X){
+                X x = (X)o;
+                System.out.println(x.getId());
+                System.out.println(x.getString());
+            }
         } catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Hilo Cliente finalizado--> ID: " + this.getId());

@@ -5,6 +5,9 @@
  */
 package cl.jshared.client.gui;
 
+import cl.jshared.common.model.Serial;
+import cl.jshared.common.model.X;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -82,8 +85,12 @@ public class JShared extends javax.swing.JFrame {
 //        }
             socket = new Socket("localhost", 2500);
             OutputStream os = socket.getOutputStream();
+            
+            X x = new X(1, "Hola desde objeto X");
+            
+            os.write(Serial.serialize(x));
 
-            os.write("hola".getBytes());
+//            os.write("hola".getBytes());
             os.close();
         } catch (IOException ex) {
             Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
