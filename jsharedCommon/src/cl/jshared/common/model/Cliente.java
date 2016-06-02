@@ -44,26 +44,22 @@ public class Cliente extends Thread implements Serializable {
         System.out.println("Hilo Cliente iniciado! --> ID: " + this.getId());
 
         try {
-            System.out.println("Esperando stream del cliente...");
+            
 //                is = socket.getInputStream();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] bytes = new byte[1];
-            int count = -1; 
-            while (-1 != (count = socket.getInputStream().read(bytes))) {
-//                    out.write(bytes, 0, count);
-                System.out.println(bytes);
-                baos.write(bytes, 0, count);
-            }
-            System.out.println(baos.toString());
-//            String str = new String(bytes);
-//            System.out.println(str);
-
-//                ois = new ObjectInputStream(is);
-//                objeto = ois.readObject();
+            byte[] bytes = new byte[1]; 
+            
+            int count = socket.getInputStream().read(bytes);
             System.out.println("Llegó objeto desde el cliente");
-//                System.out.println("Objeto recibido!: "+objeto);
+            while (count != -1) {
+                baos.write(bytes, 0, count);
+                System.out.println(baos.toString());
+                count = socket.getInputStream().read(bytes);
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("Hilo Cliente finalizado--> ID: " + this.getId());
     }
 }

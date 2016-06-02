@@ -23,13 +23,7 @@ public class JShared extends javax.swing.JFrame {
     private Socket socket;
 
     public JShared() {
-        try {
-            initComponents();
-
-            socket = new Socket("localhost", 2500);
-        } catch (IOException ex) {
-            Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        initComponents();
     }
 
     /**
@@ -79,9 +73,18 @@ public class JShared extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         try {
-            PrintWriter writer = new PrintWriter(socket.getOutputStream());
-            writer.print("Hola");
-            writer.close();
+            //        try {
+//            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+//            writer.print("Hola");
+//            writer.close();
+//        } catch (IOException ex) {
+//            Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+            socket = new Socket("localhost", 2500);
+            OutputStream os = socket.getOutputStream();
+
+            os.write("hola".getBytes());
+            os.close();
         } catch (IOException ex) {
             Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
         }

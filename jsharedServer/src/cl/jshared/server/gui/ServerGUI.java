@@ -16,6 +16,8 @@ public class ServerGUI extends javax.swing.JFrame {
     
     public ServerGUI() {
         initComponents();
+         server = new Server(Integer.parseInt(txtPuerto.getText()));
+        server.start();
     }
 
     /**
@@ -93,8 +95,7 @@ public class ServerGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        server = new Server(Integer.parseInt(txtPuerto.getText()));
-        server.start();
+       
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     /**
@@ -126,6 +127,7 @@ public class ServerGUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new ServerGUI().setVisible(true);
             }
