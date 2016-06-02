@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +19,13 @@ import java.util.logging.Logger;
  * @author pperezp
  */
 public class JShared extends javax.swing.JFrame {
+
     private Socket socket;
-    
+
     public JShared() {
         try {
             initComponents();
-            
+
             socket = new Socket("localhost", 2500);
         } catch (IOException ex) {
             Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,12 +79,9 @@ public class JShared extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         try {
-            OutputStream outputStream = socket.getOutputStream();
-//            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-            
-//            oos.writeObject(txtMensaje.getText());
-            System.out.println("hola".getBytes());
-            outputStream.write("hola".getBytes());
+            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+            writer.print("Hola");
+            writer.close();
         } catch (IOException ex) {
             Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
         }
