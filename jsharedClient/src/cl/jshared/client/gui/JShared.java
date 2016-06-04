@@ -5,10 +5,11 @@
  */
 package cl.jshared.client.gui;
 
+import cl.jshared.common.model.NuevoUsuario;
 import cl.jshared.common.model.Serial;
-import cl.jshared.common.model.X;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -39,7 +40,7 @@ public class JShared extends javax.swing.JFrame {
     private void initComponents() {
 
         btnEnviar = new javax.swing.JButton();
-        txtMensaje = new javax.swing.JTextField();
+        txtNick = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,16 +51,17 @@ public class JShared extends javax.swing.JFrame {
             }
         });
 
+        txtNick.setText("Ingrese su nick");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtNick, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -67,7 +69,7 @@ public class JShared extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEnviar)
-                    .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -83,12 +85,11 @@ public class JShared extends javax.swing.JFrame {
 //        } catch (IOException ex) {
 //            Logger.getLogger(JShared.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+            String nick = txtNick.getText();
             socket = new Socket("localhost", 2500);
             OutputStream os = socket.getOutputStream();
             
-            X x = new X(1, "Hola desde objeto X");
-            
-            os.write(Serial.serialize(x));
+            os.write(Serial.serialize(new NuevoUsuario(nick)));
 
 //            os.write("hola".getBytes());
             os.close();
@@ -135,6 +136,6 @@ public class JShared extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviar;
-    private javax.swing.JTextField txtMensaje;
+    private javax.swing.JTextField txtNick;
     // End of variables declaration//GEN-END:variables
 }

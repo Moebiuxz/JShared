@@ -24,11 +24,10 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="txtMensaje" min="-2" pref="160" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="txtNick" min="-2" pref="160" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnEnviar" min="-2" pref="111" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -38,7 +37,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnEnviar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtMensaje" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtNick" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -54,7 +53,10 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtMensaje">
+    <Component class="javax.swing.JTextField" name="txtNick">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ingrese su nick"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
