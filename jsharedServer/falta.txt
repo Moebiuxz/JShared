@@ -1,0 +1,12 @@
+SERVER
+
+- Server con hilos (Pato)
+- Chat (Lucho)
+- Lista clientes (Pato)
+- Velocidad de descargar (Patrick)
+- Lista de archvos del Cliente (Pato)
+
+
+CLIENT
+- Lista de clientes gráfico: (LUCHO)
+- 
