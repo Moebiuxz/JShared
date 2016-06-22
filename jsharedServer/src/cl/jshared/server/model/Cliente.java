@@ -2,9 +2,12 @@ package cl.jshared.server.model;
 
 import cl.jshared.common.model.NuevoUsuario;
 import cl.jshared.common.model.Serial;
+import cl.jshared.common.model.UsuarioYaExiste;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -12,12 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Cliente extends Thread implements Serializable {
-    
-    private long id;
+
     private Socket socket;
     private String nick; // es el identificador
     private InputStream is;
     private OutputStream os;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
 
     public Cliente(Socket socket) {
         this.socket = socket;
@@ -44,47 +48,90 @@ public class Cliente extends Thread implements Serializable {
     @Override
     public void run() {
         System.out.println("Hilo Cliente iniciado! --> ID: " + this.getId());
-
         try {
-            
-//                is = socket.getInputStream();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] bytes = new byte[1024]; 
-            
-            int count = socket.getInputStream().read(bytes);
-            System.out.println("Llegó objeto desde el cliente");
-            while (count != -1) {
-                baos.write(bytes, 0, count);
-                count = socket.getInputStream().read(bytes);
-            }
-            
-            Object o = Serial.deserialize(baos.toByteArray());
-            
-            if(o instanceof String){
-                String str = (String)o;
-                System.out.println(str);
-            }else if(o instanceof NuevoUsuario){
-                NuevoUsuario nu = (NuevoUsuario)o;
+            while (true) {
+
+                is = socket.getInputStream();
+                ois = new ObjectInputStream(is);
                 
-                System.out.println("Llegó un nuevo usuario");
+                Object o = ois.readObject();
                 
-                this.setNick(nu.getNick()); // error acá, esta como null ver bien porque estoy dentro de un hilo
-                if(!Server.getInstance().existeCliente(nu.getNick())){
-                    System.out.println("No existe el usuario! por ende se agrega");
-                    Server.getInstance().addCliente(this);
-                }else{
-                    System.out.println("Existe el usuario, enviando un objeto al cliente");
-                    //acá tengo que enviar un objeto al cliente
+                if(o instanceof String){
+                    String str = (String) o;
+                    System.out.println(str);
+                } else if (o instanceof NuevoUsuario) {
+                    NuevoUsuario nu = (NuevoUsuario) o;
+
+                    System.out.println("Llegó un nuevo usuario");
+
+                    this.setNick(nu.getNick()); // error acá, esta como null ver bien porque estoy dentro de un hilo
+                    if (!Server.getInstance().existeCliente(nu.getNick())) {
+                        System.out.println("No existe el usuario! por ende se agrega");
+                        Server.getInstance().addCliente(this);
+                    } else {
+                        System.out.println("Existe el usuario, enviando un objeto al cliente");
+                        enviarObjeto(new UsuarioYaExiste());
+                        break;
+                    }
                 }
             }
+        } catch(java.net.SocketException se){
+            Server.getInstance().eliminarCliente(this.getNick());
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+//        try {
+//            
+////                is = socket.getInputStream();
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            byte[] bytes = new byte[1024]; 
+//            
+//            int count = socket.getInputStream().read(bytes);
+//            System.out.println("Llegó objeto desde el cliente");
+//            while (count != -1) {
+//                baos.write(bytes, 0, count);
+//                count = socket.getInputStream().read(bytes);
+//            }
+//            
+//            Object o = Serial.deserialize(baos.toByteArray());
+//            
+//            if(o instanceof String){
+//                String str = (String)o;
+//                System.out.println(str);
+//            }else if(o instanceof NuevoUsuario){
+//                NuevoUsuario nu = (NuevoUsuario)o;
+//                
+//                System.out.println("Llegó un nuevo usuario");
+//                
+//                this.setNick(nu.getNick()); // error acá, esta como null ver bien porque estoy dentro de un hilo
+//                if(!Server.getInstance().existeCliente(nu.getNick())){
+//                    System.out.println("No existe el usuario! por ende se agrega");
+//                    Server.getInstance().addCliente(this);
+//                }else{
+//                    System.out.println("Existe el usuario, enviando un objeto al cliente");
+//                    //acá tengo que enviar un objeto al cliente
+//                }
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         System.out.println("Hilo Cliente finalizado--> ID: " + this.getId());
     }
-    
+
+    private void enviarObjeto(Object o) {
+            try {
+                os = socket.getOutputStream();
+                oos = new ObjectOutputStream(os);
+
+                oos.writeObject(o);
+            } catch (IOException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 //     private void mostrarInfo(Socket s) {
 //        try {
 //            System.out.println("--------------------------");
@@ -117,7 +164,6 @@ public class Cliente extends Thread implements Serializable {
 //            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-    
     @Override
     public String toString() {
         return this.nick;

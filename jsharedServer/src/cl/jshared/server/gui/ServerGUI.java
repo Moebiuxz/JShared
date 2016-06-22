@@ -20,12 +20,12 @@ public class ServerGUI extends javax.swing.JFrame {
         initComponents();
         server = Server.getInstance();
         
-        server.addClienteNuevoListener(new ClienteNuevoListener() {
-            @Override
-            public void actualizarListaGrafica() {
-                listClientes.setModel(new LMCliente());
-            }
-        });
+//        server.addClienteNuevoListener(new ClienteNuevoListener() {
+//            @Override
+//            public void actualizarListaGrafica() {
+//                listClientes.setModel(new LMCliente());
+//            }
+//        });
         
         server.start();
         

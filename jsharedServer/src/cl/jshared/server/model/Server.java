@@ -18,13 +18,13 @@ public class Server extends Thread{
     
     private final int puerto;
     private static LinkedList<Cliente> clientes;
-    private static LinkedList<ClienteNuevoListener> listeners;
+//    private static LinkedList<ClienteNuevoListener> listeners;
     
     
     private Server(int puerto){
         this.puerto = puerto;
         clientes = new LinkedList<>();
-        listeners = new LinkedList<>();
+//        listeners = new LinkedList<>();
     }
     
     public static Server getInstance(){
@@ -34,9 +34,9 @@ public class Server extends Thread{
         return _server;
     }
     
-    public void addClienteNuevoListener(ClienteNuevoListener cnl){
-        listeners.add(cnl);
-    }
+//    public void addClienteNuevoListener(ClienteNuevoListener cnl){
+//        listeners.add(cnl);
+//    }
 
     public Cliente getCliente(String nick){
         
@@ -69,10 +69,13 @@ public class Server extends Thread{
         }
     }
     
-    public synchronized void eliminarCliente(int socketId){
+    public synchronized void eliminarCliente(String nick){
         
         // Remover un cliente si el id de este coincide con el id del parametro
-        clientes.removeIf((cli) -> cli.getId() == socketId);
+        clientes.removeIf((cli) -> cli.getNick().equalsIgnoreCase(nick));
+//        listeners.stream().forEach((c) -> {
+//            c.actualizarListaGrafica();
+//        });
     }
 
 
@@ -83,13 +86,18 @@ public class Server extends Thread{
     public synchronized void addCliente(Cliente clienteNuevo) {
         clientes.add(clienteNuevo);
 
-        listeners.stream().forEach((c) -> {
-            c.actualizarListaGrafica();
-        });
+//        listeners.stream().forEach((c) -> {
+//            c.actualizarListaGrafica();
+//        });
     }
     
     public synchronized boolean existeCliente(String nick) {
         return clientes.stream().anyMatch((cli) -> cli.getNick().equalsIgnoreCase(nick));
     }
             
+    
+    public static void main(String[] args) {
+        Server server = Server.getInstance();
+        server.start();
+    }
 }
